@@ -6,6 +6,8 @@ import { PlaneLineGeometry } from './geometries/PlaneLineGeometry';
 import { HTMLMesh } from './interactive/HTMLMesh';
 import { InteractiveGroup } from './interactive/InteractiveGroup';
 import { GUI } from './libs/dat.gui.module';
+import { Axis2D } from './viz/frame/Axis2D';
+import { Line2D } from './viz/plots/Line2D';
 
 
 const scene = new THREE.Scene();
@@ -53,7 +55,17 @@ functionMaterial.side = THREE.BackSide;
 const functionMesh = new THREE.Mesh(functionGeometry, functionMaterial);
 functionMesh.position.set(-1.5, 0, -1.5);
 functionMesh.scale.set(3, 0.5, 3);
-scene.add(functionMesh);
+// scene.add(functionMesh);
+
+
+// 2d function example
+const myFn = (x) => 0.5 * Math.exp(-Math.pow(x, 2));
+const myFn2 = (x) => Math.sin(Math.PI * x);
+const line2d = Line2D.fromFunction([myFn, myFn2], [0xff0000, 0x00ff00]);
+line2d.scale.set(0.25, 0.25, 1);
+line2d.position.set(0, 1, -0.5);
+scene.add(line2d);
+
 
 function onParameterChange() {
     functionMesh.scale.y = functionParameters.scale;
