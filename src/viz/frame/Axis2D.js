@@ -1,4 +1,4 @@
-import { BufferAttribute, BufferGeometry, DoubleSide, Float32BufferAttribute, Group, LineBasicMaterial, LineSegments, Mesh, MeshBasicMaterial, TrianglesDrawMode } from "three";
+import { BufferAttribute, BufferGeometry, DoubleSide, Float32BufferAttribute, Group, LineBasicMaterial, LineSegments, Mesh, MeshBasicMaterial, PlaneGeometry, TrianglesDrawMode } from "three";
 
 export class Axis2D extends Group {
     constructor(color=0xc0c0c0) {
@@ -19,6 +19,11 @@ export class Axis2D extends Group {
         );
         this.axisArrows.name = 'axisArrows';
         this.add(this.axisArrows);
+
+        // const backdropGeometry = new PlaneGeometry(2, 2);
+        // this.backdrop = new Mesh(backdropGeometry, new MeshBasicMaterial({ color: 0x202020, opacity: 0.1, side: DoubleSide }));
+        // this.backdrop.position.set(0, 0, -0.001);
+        // this.add(this.backdrop);
     }
 }
 
