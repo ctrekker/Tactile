@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { VRButton } from './components/VRButton';
+import { XRControllerModelFactory } from './components/XRControllerModelFactory';
 import { PlaneLineGeometry } from './geometries/PlaneLineGeometry';
 
 const scene = new THREE.Scene();
@@ -37,6 +38,21 @@ functionMaterial.side = THREE.BackSide;
 const functionMesh = new THREE.Mesh(functionGeometry, functionMaterial);
 functionMesh.position.set(-1.5, 0, -1.5);
 scene.add(functionMesh);
+
+
+// controllers
+const controller1 = renderer.xr.getController(0);
+scene.add(controller1);
+const controller2 = renderer.xr.getController(1);
+scene.add(controller2);
+
+const controllerModelFactory = new XRControllerModelFactory();
+const controllerGrip1 = renderer.xr.getControllerGrip(0);
+controllerGrip1.add(controllerModelFactory.createControllerModel(controllerGrip1));
+scene.add(controllerGrip1);
+const controllerGrip2 = renderer.xr.getControllerGrip(1);
+controllerGrip2.add(controllerModelFactory.createControllerModel(controllerGrip2));
+scene.add(controllerGrip2);
 
 function parametricTexture(fn) {
     const width = 250;
