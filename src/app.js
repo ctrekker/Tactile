@@ -1,3 +1,5 @@
+import './index.css';
+
 import * as THREE from 'three';
 import { Group, Line, Mesh } from 'three';
 import { VRButton } from './components/VRButton';
