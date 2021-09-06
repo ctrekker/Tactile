@@ -1,6 +1,8 @@
 # Tactile - VR data visualization
 ## Try it out!
-Visit https://ctrekker.github.io/Tactile/ to check it out! Make sure you're on a VR-compatible device though, otherwise this app isn't very useful.
+Visit https://ctrekker.github.io/Tactile/ to check it out! The scene below will render, and if you open the page on a VR-compatible device you can interact with it in 3D!
+
+<img src="assets/line2d.png" width="400"/>
 
 ## Development
 To start the WebPack development server,
