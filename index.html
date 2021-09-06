@@ -1,1 +1,26 @@
-<!doctype html><html><head><meta charset="utf-8"><title>Tactile</title><meta name="viewport" content="width=device-width,initial-scale=1"><script defer="defer" src="app.bundle.js"></script></head><body></body></html>
+<!doctype html><html><head><title>Tactile</title><script>window.MathJax = {
+                jax: ['input/TeX', 'output/SVG'],
+                showMathMenu: false,
+                SVG: {
+                    useGlobalCache: false
+                },
+                startup: {
+                    pageReady() {
+                        return MathJax.startup.defaultPageReady().then(function() {
+                            console.log('mjx ready');
+
+                            const formula = '\\frac{1}{n^2}';
+                            let wrapper = MathJax.tex2svg(`${formula}`, {em: 10, ex: 5,display: true});
+                            let mjOut = wrapper.getElementsByTagName('svg')[0];
+                            const svg = mjOut.outerHTML;
+                            console.log(`data:image/svg+xml,${encodeURIComponent(svg)}`);
+                            // document.getElementById('mjx-builder').appendChild(wrapper);
+
+                            // MathJax.typesetPromise(wrapper).then(() => {
+                            //     console.log(wrapper);
+                            // })
+                            
+                        })
+                    }
+                }
+            };</script><script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script><script></script><script defer="defer" src="app.bundle.js"></script></head><body><div id="mjx-builder" style="display: none"></div></body></html>
