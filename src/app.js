@@ -14,6 +14,7 @@ import { SVGLoader } from './components/SVGLoader';
 import { LaTeXObject } from './viz/text/LaTeXObject';
 import { DynamicElements } from './interactive/DynamicElements';
 import { Axis3D } from './viz/frame/Axis3D';
+import { ArgTypes, FunctionWrapper, ReturnTypes } from './viz/util/FunctionWrapper';
 
 
 const scene = new THREE.Scene();
@@ -78,7 +79,17 @@ functionMesh.scale.set(3, 0.5, 3);
 
 // 2d function example
 // const myFn = (x, t=0) => Math.cos(t) * Math.exp(-Math.pow(x, 2));
-// const myFn2 = (x, t=0) => Math.sin(Math.PI * x - 3 * t) + Math.sin(Math.PI * x + 2 * t) + Math.sin(2 * Math.PI * x + 2 * t);
+const myFn2 = (x, t=0) => Math.sin(Math.PI * x - 3 * t) + Math.sin(Math.PI * x + 2 * t) + Math.sin(2 * Math.PI * x + 2 * t);
+
+const myFn2_wrapper = new FunctionWrapper(myFn2, {
+    args: [
+        ArgTypes.SPACE,
+        ArgTypes.TIME
+    ],
+    return: ReturnTypes.SCALAR
+});
+console.log(myFn2_wrapper.range(-2, 2, 0.1));
+
 // const line2d = new Line2D({
 //     fn: [myFn, myFn2],
 //     start: -2,
