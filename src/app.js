@@ -1,16 +1,13 @@
 import './index.css';
 
 import * as THREE from 'three';
-import { Group, Line, Mesh, MeshBasicMaterial, PlaneGeometry } from 'three';
 import { VRButton } from './components/VRButton';
 import { XRControllerModelFactory } from './components/XRControllerModelFactory';
 import { PlaneLineGeometry } from './geometries/PlaneLineGeometry';
 import { HTMLMesh } from './interactive/HTMLMesh';
 import { InteractiveGroup } from './interactive/InteractiveGroup';
 import { GUI } from './libs/dat.gui.module';
-import { Axis2D } from './viz/frame/Axis2D';
 import { Line2D } from './viz/plots/Line2D';
-import { SVGLoader } from './components/SVGLoader';
 import { LaTeXObject } from './viz/text/LaTeXObject';
 
 
@@ -63,15 +60,18 @@ functionMesh.scale.set(3, 0.5, 3);
 // scene.add(functionMesh);
 
 
-const latex = new LaTeXObject(`f(x)=e^{-x^2}`);
-latex.position.set(-0.07, 1.13, -0.5);
-latex.scale.set(0.125, 0.125, 1);
-scene.add(latex);
+window.onlatex = () => {
+    const latex = new LaTeXObject(`f(x)=e^{-x^2}`);
+    latex.position.set(-0.07, 1.13, -0.5);
+    latex.scale.set(0.125, 0.125, 1);
+    scene.add(latex);
 
-const latex2 = new LaTeXObject(`f(x)=sin(x)`);
-latex2.position.set(0.16, 1.2, -0.5);
-latex2.scale.set(0.125, 0.125, 1);
-scene.add(latex2);
+    const latex2 = new LaTeXObject(`f(x)=sin(x)`);
+    latex2.position.set(0.16, 1.2, -0.5);
+    latex2.scale.set(0.125, 0.125, 1);
+    scene.add(latex2);
+};
+if(MathJax.tex2svg) window.onlatex();
 
 
 // 2d function example
