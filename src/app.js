@@ -13,6 +13,7 @@ import { Line2D } from './viz/plots/Line2D';
 import { SVGLoader } from './components/SVGLoader';
 import { LaTeXObject } from './viz/text/LaTeXObject';
 import { DynamicElements } from './interactive/DynamicElements';
+import { Axis3D } from './viz/frame/Axis3D';
 
 
 const scene = new THREE.Scene();
@@ -28,7 +29,7 @@ document.body.appendChild(VRButton.createButton(renderer));
 
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 camera.position.set(0.3, 1.1, 0);
-camera.lookAt(0, 1, -0.5);
+camera.lookAt(0, 1, -1);
 scene.add(camera);
 
 
@@ -64,31 +65,36 @@ functionMesh.scale.set(3, 0.5, 3);
 // scene.add(functionMesh);
 
 
-const latex = new LaTeXObject(`f(x)=e^{-x^2}`);
-latex.position.set(-0.07, 1.13, -0.5);
-latex.scale.set(0.125, 0.125, 1);
-scene.add(latex);
+// const latex = new LaTeXObject(`f(x)=e^{-x^2}`);
+// latex.position.set(-0.07, 1.13, -0.5);
+// latex.scale.set(0.125, 0.125, 1);
+// scene.add(latex);
 
-const latex2 = new LaTeXObject(`f(x)=sin(x)`);
-latex2.position.set(0.16, 1.2, -0.5);
-latex2.scale.set(0.125, 0.125, 1);
-scene.add(latex2);
+// const latex2 = new LaTeXObject(`f(x)=sin(x)`);
+// latex2.position.set(0.16, 1.2, -0.5);
+// latex2.scale.set(0.125, 0.125, 1);
+// scene.add(latex2);
 
 
 // 2d function example
-const myFn = (x, t=0) => Math.cos(t) * Math.exp(-Math.pow(x, 2));
-const myFn2 = (x, t=0) => Math.sin(Math.PI * x - 3 * t) + Math.sin(Math.PI * x + 2 * t) + Math.sin(2 * Math.PI * x + 2 * t);
-const line2d = new Line2D({
-    fn: [myFn, myFn2],
-    start: -2,
-    stop: 2,
-    step: 0.1,
-    color: [0xff0000, 0x00ff00],
-    animated: true
-});
-line2d.scale.set(0.25, 0.25, 1);
-line2d.position.set(0, 1, -0.5);
-scene.add(line2d);
+// const myFn = (x, t=0) => Math.cos(t) * Math.exp(-Math.pow(x, 2));
+// const myFn2 = (x, t=0) => Math.sin(Math.PI * x - 3 * t) + Math.sin(Math.PI * x + 2 * t) + Math.sin(2 * Math.PI * x + 2 * t);
+// const line2d = new Line2D({
+//     fn: [myFn, myFn2],
+//     start: -2,
+//     stop: 2,
+//     step: 0.1,
+//     color: [0xff0000, 0x00ff00],
+//     animated: true
+// });
+// line2d.scale.set(0.25, 0.25, 1);
+// line2d.position.set(0, 1, -0.5);
+// scene.add(line2d);
+
+
+const axis3d = new Axis3D();
+axis3d.position.set(0, 1, -2);
+scene.add(axis3d);
 
 
 function onParameterChange() {

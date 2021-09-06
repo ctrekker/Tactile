@@ -14,7 +14,7 @@ export class Axis2D extends Group {
         const arrowMaterial = new MeshBasicMaterial({ color });
         arrowMaterial.side = DoubleSide;
         this.axisArrows = new Mesh(
-            new AxisArrowsGeometry(),
+            new ArrowheadGeometry2D(),
             arrowMaterial
         );
         this.axisArrows.name = 'axisArrows';
@@ -43,7 +43,7 @@ class Axis2DGeometry extends BufferGeometry {
     }
 }
 
-class AxisArrowsGeometry extends BufferGeometry {
+class ArrowheadGeometry2D extends BufferGeometry {
     constructor(arrowWidth=0.05, arrowHeight=0.05) {
         super();
 
