@@ -15,6 +15,7 @@ This will hotload any changes to JavaScript files and refresh your browser windo
 ### Visualizations
 - [x] Basic 2D line plots
 - [x] LaTeX support!!
+- [x] Plotting 3D parametric lines
 - [ ] Plotting 3D functions / 2D surfaces
 - [ ] Plotting 3D parametric surfaces
 - [ ] Bar plotting 2D (bar, histogram)
