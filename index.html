@@ -8,12 +8,13 @@
                     pageReady() {
                         return MathJax.startup.defaultPageReady().then(function() {
                             console.log('mjx ready');
+                            window.onlatex && window.onlatex();
 
-                            const formula = '\\frac{1}{n^2}';
-                            let wrapper = MathJax.tex2svg(`${formula}`, {em: 10, ex: 5,display: true});
-                            let mjOut = wrapper.getElementsByTagName('svg')[0];
-                            const svg = mjOut.outerHTML;
-                            console.log(`data:image/svg+xml,${encodeURIComponent(svg)}`);
+                            // const formula = '\\frac{1}{n^2}';
+                            // let wrapper = MathJax.tex2svg(`${formula}`, {em: 10, ex: 5,display: true});
+                            // let mjOut = wrapper.getElementsByTagName('svg')[0];
+                            // const svg = mjOut.outerHTML;
+                            // console.log(`data:image/svg+xml,${encodeURIComponent(svg)}`);
                             // document.getElementById('mjx-builder').appendChild(wrapper);
 
                             // MathJax.typesetPromise(wrapper).then(() => {
