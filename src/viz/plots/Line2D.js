@@ -56,7 +56,7 @@ export class Line2D extends Group {
 
         this.animated = animated;
         if(this.animated) {
-            DynamicElements.register(this);
+            DynamicElements.add(this);
         }
     }
     

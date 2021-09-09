@@ -2,7 +2,7 @@ export class DynamicElements {
     static elements = [];
 
     // Called when an object is dynamic
-    static register(el) {
+    static add(el) {
         DynamicElements.elements.push(el);
     }
     // Called on each animation frame

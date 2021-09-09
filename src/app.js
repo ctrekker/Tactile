@@ -12,6 +12,8 @@ import { LaTeXObject } from './viz/text/LaTeXObject';
 import { DynamicElements } from './interactive/DynamicElements';
 import { Axis3D } from './viz/frame/Axis3D';
 import { ArgTypes, FunctionWrapper, ReturnTypes } from './viz/util/FunctionWrapper';
+import { Line3D } from './viz/plots/Line3D';
+import { Vector3 } from 'three';
 
 
 const scene = new THREE.Scene();
@@ -88,7 +90,7 @@ const myFn2_wrapper = new FunctionWrapper(myFn2, {
     ],
     return: ReturnTypes.SCALAR
 });
-console.log(myFn2_wrapper.range(-2, 2, 0.1));
+// console.log(myFn2_wrapper.range(-2, 2, 0.1));
 
 // const line2d = new Line2D({
 //     fn: [myFn, myFn2],
@@ -104,9 +106,29 @@ console.log(myFn2_wrapper.range(-2, 2, 0.1));
 
 
 // 3d line example
-const axis3d = new Axis3D();
-axis3d.position.set(0, 1, -2);
-scene.add(axis3d);
+const helixFn = (t, a=0) => new THREE.Vector3(Math.cos(t - a), t, Math.sin(t - a));
+const helixFnWrapper = new FunctionWrapper(helixFn, {
+    args: [
+        ArgTypes.PARAMETRIC,
+        ArgTypes.TIME
+    ],
+    return: ReturnTypes.VECTOR
+});
+const helixFn2 = (t, a=0) => new THREE.Vector3(-2 * Math.cos(t + a), t, 2 * Math.sin(t + a));
+const helixFnWrapper2 = new FunctionWrapper(helixFn2, {
+    args: [
+        ArgTypes.PARAMETRIC,
+        ArgTypes.TIME
+    ],
+    return: ReturnTypes.VECTOR
+});
+const line3d = Line3D.fromFunction([helixFnWrapper, helixFnWrapper2], -12, 12, 0.2, {
+    color: [0x00ff00, 0xff0000],
+    animated: true
+});
+line3d.position.set(0, 1, -0.5);
+line3d.scale.set(0.25, 0.25, 0.25);
+scene.add(line3d);
 
 
 function onParameterChange() {

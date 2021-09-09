@@ -1,3 +1,5 @@
+import { DataArray } from "./DataArray";
+
 export const ArgTypes = generateEnum([
     'SPACE',      // space parameter along plot axes
     'TIME',       // time/animation parameter
@@ -20,13 +22,23 @@ export class FunctionWrapper {
     }
 
     range(start, stop, step, ...args) {
-        const out = new Float32Array((stop-start) / step + 1);
+        const _T = this.properties.return === ReturnTypes.SCALAR ? Float32Array : Array;
+        const out = new _T((stop-start) / step + 1);
         let i = 0;
         for(let x=start; x<=stop+step; x+=step) {
             out[i] = this.fn(x, ...args);
             i++;
         }
-        return out;
+        return new DataArray(out, 3);
+    }
+
+    rangeInPlace(start, stop, step, data, ...args) {
+        let i = 0;
+        for(let x=start; x<=stop+step; x+=step) {
+            data.set(i, this.fn(x, ...args));
+            i++;
+        }
+        return data;
     }
 }
 
