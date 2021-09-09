@@ -1,6 +1,6 @@
 # Tactile - VR data visualization
 ## Try it out!
-Visit https://ctrekker.github.io/Tactile/ to check it out! The scene below will render, and if you open the page on a VR-compatible device you can interact with it in 3D!
+Visit https://ctrekker.github.io/Tactile/ to check it out! The scene below will render (outdated, something different will appear now), and if you open the page on a VR-compatible device you can interact with it in 3D!
 
 <img src="assets/line2d.png" width="400"/>
 
