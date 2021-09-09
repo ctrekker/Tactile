@@ -106,48 +106,68 @@ const myFn2_wrapper = new FunctionWrapper(myFn2, {
 
 
 // 3d line example
-const helixFn = (t, a=0) => new THREE.Vector3(Math.cos(t - a), t, Math.sin(t - a));
-const helixFnWrapper = new FunctionWrapper(helixFn, {
+// TODO: Make functions mutate vectors rather than instantiate them (for performance)
+const eFn = (t, a=0) => new THREE.Vector3(t, 0, Math.sin(t - 4 * a + Math.PI / 2));
+const eFnWrapper = new FunctionWrapper(eFn, {
     args: [
         ArgTypes.PARAMETRIC,
         ArgTypes.TIME
     ],
     return: ReturnTypes.VECTOR
 });
-const helixFn2 = (t, a=0) => new THREE.Vector3(-2 * Math.cos(t + a), t, 2 * Math.sin(t + a));
-const helixFnWrapper2 = new FunctionWrapper(helixFn2, {
+const mFn = (t, a=0) => new THREE.Vector3(t, Math.sin(t - 4 * a), 0);
+const mFnWrapper = new FunctionWrapper(mFn, {
     args: [
         ArgTypes.PARAMETRIC,
         ArgTypes.TIME
     ],
     return: ReturnTypes.VECTOR
 });
-const line3d = Line3D.fromFunction([helixFnWrapper, helixFnWrapper2], -12, 12, 0.2, {
-    color: [0x00ff00, 0xff0000],
+const boundsFnWrapper = new FunctionWrapper((t, a) => new THREE.Vector3(-Math.PI * 3, Math.sin(t), Math.cos(t)), {
+    args: [
+        ArgTypes.PARAMETRIC,
+        ArgTypes.TIME
+    ],
+    return: ReturnTypes.VECTOR
+});
+const sumFnWrapper = new FunctionWrapper(
+    (t, a) => new THREE.Vector3(-Math.PI * 3, 0.01 * Math.sin(t) + Math.sin(-Math.PI * 3 - 4 * a), 0.01 * Math.cos(t) + Math.sin(Math.PI * 3.5 - 4 * a)),
+    {
+        args: [
+            ArgTypes.PARAMETRIC,
+            ArgTypes.TIME
+        ],
+        return: ReturnTypes.VECTOR
+    }
+);
+console.log(mFnWrapper.range(-1, 0, 0.03));
+const line3d = Line3D.fromFunction([eFnWrapper, mFnWrapper, boundsFnWrapper, sumFnWrapper], -Math.PI * 3, Math.PI * 3, 0.06, {
+    color: [0x0000ff, 0xff0000, 0x505050, 0xffffff],
+    showAxis: false,
     animated: true
 });
 line3d.position.set(0, 1, -0.5);
-line3d.scale.set(0.25, 0.25, 0.25);
+line3d.scale.set(1, 0.25, 0.25);
 scene.add(line3d);
 
 
-function onParameterChange() {
-    functionMesh.scale.y = functionParameters.scale;
-    functionMesh.position.x = -1.5 + functionParameters.translateX;
-}
-const gui = new GUI({ width: 300 });
-gui.add(functionParameters, 'scale', 0.0, 1.0).onChange(onParameterChange);
-gui.add(functionParameters, 'translateX', -1.0, 1.0).onChange(onParameterChange);
-gui.domElement.style.visibility = 'hidden';
+// function onParameterChange() {
+//     functionMesh.scale.y = functionParameters.scale;
+//     functionMesh.position.x = -1.5 + functionParameters.translateX;
+// }
+// const gui = new GUI({ width: 300 });
+// gui.add(functionParameters, 'scale', 0.0, 1.0).onChange(onParameterChange);
+// gui.add(functionParameters, 'translateX', -1.0, 1.0).onChange(onParameterChange);
+// gui.domElement.style.visibility = 'hidden';
 
 const guiGroup = new InteractiveGroup(renderer, camera);
-scene.add(guiGroup);
+// scene.add(guiGroup);
 
-const guiMesh = new HTMLMesh(gui.domElement);
-guiMesh.position.set(-0.75, 1.5, -0.5);
-guiMesh.rotation.y = Math.PI / 4;
-guiMesh.scale.setScalar(2);
-guiGroup.add(guiMesh);
+// const guiMesh = new HTMLMesh(gui.domElement);
+// guiMesh.position.set(-0.75, 1.5, -0.5);
+// guiMesh.rotation.y = Math.PI / 4;
+// guiMesh.scale.setScalar(2);
+// guiGroup.add(guiMesh);
 
 
 // controllers

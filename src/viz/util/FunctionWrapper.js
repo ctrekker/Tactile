@@ -23,7 +23,7 @@ export class FunctionWrapper {
 
     range(start, stop, step, ...args) {
         const _T = this.properties.return === ReturnTypes.SCALAR ? Float32Array : Array;
-        const out = new _T((stop-start) / step + 1);
+        const out = new _T(Math.floor((stop-start) / step + 1));
         let i = 0;
         for(let x=start; x<=stop+step; x+=step) {
             out[i] = this.fn(x, ...args);

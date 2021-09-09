@@ -5,10 +5,13 @@ import { DataArray } from "../util/DataArray";
 
 export class Line3D extends Group {
     // data: Array<Vector3>
-    constructor(data, { animated=false, color=0xff0000, _fn }={}) {
+    constructor(data, { animated=false, showAxis=true, color=0xff0000, _fn }={}) {
         super();
 
-        this.add(new Axis3D());
+        if(showAxis) {
+            const axis = new Axis3D();
+            this.add(axis);
+        }
 
         this.data = Array.isArray(data) ? data : [data];
         this.lines = [];
@@ -20,9 +23,9 @@ export class Line3D extends Group {
         this._fn = _fn;
 
         this.plotScale = new Vector3(
-            Math.max(Math.abs(DataArray.reduceMax(this.data, 'x')), Math.abs(DataArray.reduceMin(this.data, 'x'))) * 1.5,
-            Math.max(Math.abs(DataArray.reduceMax(this.data, 'y')), Math.abs(DataArray.reduceMin(this.data, 'y'))) * 1.5,
-            Math.max(Math.abs(DataArray.reduceMax(this.data, 'z')), Math.abs(DataArray.reduceMin(this.data, 'z'))) * 1.5,
+            Math.max(Math.abs(DataArray.reduceMax(this.data, 'x')), Math.abs(DataArray.reduceMin(this.data, 'x'))) * 1.5 || 1,
+            Math.max(Math.abs(DataArray.reduceMax(this.data, 'y')), Math.abs(DataArray.reduceMin(this.data, 'y'))) * 1.5 || 1,
+            Math.max(Math.abs(DataArray.reduceMax(this.data, 'z')), Math.abs(DataArray.reduceMin(this.data, 'z'))) * 1.5 || 1,
         );
 
         for(let i=0; i<this.data.length; i++) {

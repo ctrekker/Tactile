@@ -1,4 +1,4 @@
-import { BufferAttribute, BufferGeometry, ConeGeometry, DoubleSide, Float32BufferAttribute, Group, LineBasicMaterial, LineSegments, Mesh, MeshBasicMaterial, SphereGeometry } from "three";
+import { BufferGeometry, ConeGeometry, Float32BufferAttribute, Group, LineBasicMaterial, LineSegments, Mesh, MeshBasicMaterial, SphereGeometry } from "three";
 
 export class Axis3D extends Group {
     constructor(color=0xc0c0c0) {
@@ -11,10 +11,10 @@ export class Axis3D extends Group {
         this.axes.name = 'axes';
         this.add(this.axes);
 
-        const arrowMaterial = new MeshBasicMaterial({ color });
-        this.axisArrows = new Arrowheads3D(arrowMaterial);
-        this.axisArrows.name = 'axisArrows';
-        this.add(this.axisArrows);
+        // const arrowMaterial = new MeshBasicMaterial({ color });
+        // this.axisArrows = new Arrowheads3D(arrowMaterial);
+        // this.axisArrows.name = 'axisArrows';
+        // this.add(this.axisArrows);
     }
 }
 
