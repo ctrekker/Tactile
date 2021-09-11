@@ -1,68 +1,51 @@
-import { BufferGeometry, Float32BufferAttribute, Group, Line, LineBasicMaterial } from "three";
+import { BufferGeometry, Float32BufferAttribute, Group, Line, LineBasicMaterial, Vector2, Vector3 } from "three";
 import { DynamicElements } from "../../interactive/DynamicElements";
 import { Axis2D } from "../frame/Axis2D";
+import { DataArray } from "../util/DataArray";
 
 export class Line2D extends Group {
-    constructor({x, y, fn, step, start, stop, animated=false, color=0xff0000}) {
+    constructor(data, { animated=false, color=0xff0000, _fn={} }) {
         super();
 
         this.add(new Axis2D());
 
+        this.data = Array.isArray(data) ? data : [data];
         this.lines = [];
-        this.x = x;
-        this.y = y;
-
-        if(fn) {
-            if(typeof fn === 'function') {
-                fn = [fn];
-            }
-            this.fn = fn;
-            this.step = step;
-            this.start = start;
-            this.stop = stop;
-
-            this.x = [];
-            this.y = [];
-    
-            for(let _fn of fn) {
-                this.x.push([]);
-                this.y.push([]);
-
-                calculateFunctionValues(_fn, [], start, stop, step, this.x[this.x.length-1], this.y[this.y.length-1], true);
-            }
-        }
-        
-        x = this.x;
-        y = this.y;
-        const xMin = Math.min(...x.flat());
-        const yMin = Math.min(...y.flat());
-        const xMax = Math.max(...x.flat());
-        const yMax = Math.max(...y.flat());
-        this.xScale = Math.max(Math.abs(xMin), Math.abs(xMax));
-        this.yScale = Math.max(Math.abs(yMin), Math.abs(yMax));
-
-        if(x[0].length || x.length === 0) {
-            if(x.length !== y.length) {
-                throw new Error(`x and y must contain the same number of lines (${x.length} != ${y.length})`);
-            }
-
-            for(let i=0; i<x.length; i++) {
-                this.addLine(x[i], y[i], color.length ? color[i] : color);
-            }
-        }
-        else {
-            this.addLine(x, y, color);
-        }
-
+        this.color = color;
         this.animated = animated;
+        this._fn = _fn;
+
+        this.plotScale = new Vector3(
+            Math.max(Math.abs(DataArray.reduceMax(this.data, 'x')), Math.abs(DataArray.reduceMin(this.data, 'x'))) || 1,
+            Math.max(Math.abs(DataArray.reduceMax(this.data, 'y')), Math.abs(DataArray.reduceMin(this.data, 'y'))) || 1,
+            1
+        );
+
+        for(let i=0; i<this.data.length; i++) {
+            this.addLine(this.data[i], this.color.length ? this.color[i] : this.color);
+        }
+
         if(this.animated) {
             DynamicElements.add(this);
         }
     }
+
+    static fromFunction(fn, start, stop, step, parameters={}) {
+        if(!Array.isArray(fn)) {
+            fn = [fn];
+        }
+        return new Line2D(fn.map(f => f.range(start, stop, step)), {
+            ...parameters,
+            _fn: {
+                start, stop, step,
+                fns: fn
+            }
+        });
+    }
     
-    addLine(xValues, yValues, color) {
+    addLine(data, color) {
         const line = new Line(
-            new Line2DGeometry(xValues, yValues, this.xScale, this.yScale),
+            new Line2DGeometry(data.x, data.y, this.plotScale.x, this.plotScale.y),
             new LineBasicMaterial({ color })
         )
         this.lines.push(line);
@@ -71,49 +54,9 @@ export class Line2D extends Group {
 
     update(t, delta) {
         let i = 0;
-        for(let fn of this.fn) {
-            calculateFunctionValues(fn, [t], this.start, this.stop, this.step, this.x[i], this.y[i], false);
-            this.lines[i].geometry.update(this.x[i], this.y[i], this.xScale, this.yScale);
-            i++;
-        }
-    }
-
-    // set color(newColor) {
-
-    // }
-
-
-    static fromFunction(fns, color, xMin=-2, xMax=2, step=0.1) {
-        const xValues = [];
-        const yValues = [];
-
-        if(typeof fns === 'function') {
-            fns = [fns];
-        }
-
-        for(let fn of fns) {
-            xValues.push([]);
-            yValues.push([]);
-            for(let x=xMin; x<=xMax+step; x+=step) {
-                xValues[xValues.length-1].push(x);
-                yValues[xValues.length-1].push(fn(x));
-            }
-        }
-
-        return new Line2D({x: xValues, y: yValues, color});
-    }
-}
-
-function calculateFunctionValues(fn, args, start, stop, step, x, y, doPush=false) {
-    let i = 0;
-    for(let _x=start; _x<=stop+step; _x+=step) {
-        if(doPush) {
-            x.push(_x);
-            y.push(fn(_x, ...args));
-        }
-        else {
-            x[i] = _x;
-            y[i] = fn(_x, ...args);
+        for(let fn of this._fn.fns) {
+            fn.rangeInPlace(this._fn.start, this._fn.stop, this._fn.step, this.data[i], t);
+            this.lines[i].geometry.update(this.data[i], this.plotScale);
             i++;
         }
     }
@@ -137,11 +80,11 @@ class Line2DGeometry extends BufferGeometry {
         this.setAttribute('position', new Float32BufferAttribute(vertices, 3));
     }
 
-    update(xValues, yValues, xScale, yScale) {
-        for(let i=0; i<xValues.length; i++) {
-            const x = xValues[i] / xScale;
-            const y = yValues[i] / yScale;
-            this.attributes.position.setXYZ(i, x, y, 0);
+    update(data, scale) {
+        const scaledData = data.scale(scale);
+        for(let i=0; i<data.length; i++) {
+            const v = scaledData.get(i);
+            this.attributes.position.setXYZ(i, v.x, v.y, 0);
         }
         this.attributes.position.needsUpdate = true;
     }

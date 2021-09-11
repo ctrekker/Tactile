@@ -1,3 +1,4 @@
+import { Vector2, Vector3 } from "three";
 import { DataArray } from "./DataArray";
 
 export const ArgTypes = generateEnum([
@@ -7,7 +8,6 @@ export const ArgTypes = generateEnum([
     'INTERACTIVE' // user controlled interactive parameter
 ]);
 export const ReturnTypes = generateEnum([
-    'SCALAR', // for surfaces
     'VECTOR'  // for fields, parametric, and (possibly) complex plots
 ]);
 
@@ -22,14 +22,23 @@ export class FunctionWrapper {
     }
 
     range(start, stop, step, ...args) {
-        const _T = this.properties.return === ReturnTypes.SCALAR ? Float32Array : Array;
+        const _T = Array;
         const out = new _T(Math.floor((stop-start) / step + 1));
         let i = 0;
         for(let x=start; x<=stop+step; x+=step) {
             out[i] = this.fn(x, ...args);
             i++;
         }
-        return new DataArray(out, 3);
+        return new DataArray(out, FunctionWrapper.getN(out[i]));
+    }
+
+    static getN(v) {
+        if(v instanceof Vector2) {
+            return 2;
+        }
+        if(v instanceof Vector3) {
+            return 3;
+        }
     }
 
     rangeInPlace(start, stop, step, data, ...args) {
