@@ -14,6 +14,7 @@ import { Axis3D } from './viz/frame/Axis3D';
 import { ArgTypes, FunctionWrapper, ReturnTypes } from './viz/util/FunctionWrapper';
 import { Line3D } from './viz/plots/Line3D';
 import { Vector2, Vector3 } from 'three';
+import { VoxelPlot } from './viz/plots/Voxel';
 
 
 const scene = new THREE.Scene();
@@ -33,7 +34,7 @@ camera.lookAt(0, 1, -1);
 scene.add(camera);
 
 
-const overheadLight = new THREE.DirectionalLight(0xffffff, 0.5);
+const overheadLight = new THREE.DirectionalLight(0xffffff, 1.25);
 overheadLight.position.set(1, 1, 1);
 scene.add(overheadLight);
 const overheadLight2 = new THREE.DirectionalLight(0xffffff, 0.54);
@@ -81,23 +82,38 @@ if(MathJax.tex2svg) window.onlatex();
 
 // 2d function example
 // const myFn = (x, t=0) => Math.cos(t) * Math.exp(-Math.pow(x, 2));
-const myFn2 = (x, t=0) => new Vector2(x, Math.sin(Math.PI * x - 3 * t) + Math.sin(Math.PI * x + 2 * t) + Math.sin(2 * Math.PI * x + 2 * t));
+// const myFn2 = (x, t=0) => new Vector2(x, Math.sin(Math.PI * x - 3 * t) + Math.sin(Math.PI * x + 2 * t) + Math.sin(2 * Math.PI * x + 2 * t));
 
-const myFn2_wrapper = new FunctionWrapper(myFn2, {
-    args: [
-        ArgTypes.SPACE,
-        ArgTypes.TIME
-    ],
-    return: ReturnTypes.VECTOR
-});
+// const myFn2_wrapper = new FunctionWrapper(myFn2, {
+//     args: [
+//         ArgTypes.SPACE,
+//         ArgTypes.TIME
+//     ],
+//     return: ReturnTypes.VECTOR
+// });
 
-const line2d = Line2D.fromFunction([myFn2_wrapper], -2, 2, 0.1, {
-    color: [0xff0000, 0x00ff00],
-    animated: true
+// const line2d = Line2D.fromFunction([myFn2_wrapper], -2, 2, 0.1, {
+//     color: [0xff0000, 0x00ff00],
+//     animated: true
+// });
+// line2d.scale.set(0.25, 0.25, 1);
+// line2d.position.set(0, 1, -0.5);
+// scene.add(line2d);
+
+
+// Example: Voxel Plot
+const voxelPlot = new VoxelPlot([
+    [[0, 1, 1]],
+    [[1, 0, 1]],
+    [[0, 1, 1]]
+], {
+    // opacity: 0.8,
+    // gap: 0.2,
+    // color: 0xff0000
 });
-line2d.scale.set(0.25, 0.25, 1);
-line2d.position.set(0, 1, -0.5);
-scene.add(line2d);
+voxelPlot.scale.set(0.25, 0.25 * 1/3, 0.25);
+voxelPlot.position.set(1, 0, -2);
+scene.add(voxelPlot);
 
 
 // TODO: Make functions mutate vectors rather than instantiate them (for performance)
